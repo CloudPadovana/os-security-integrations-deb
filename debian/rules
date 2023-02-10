@@ -1,11 +1,25 @@
 #!/usr/bin/make -f
 
-export PYBUILD_NAME=python3-django-horizon-cloudveneto
+PYBUILD_NAME=python3-django-horizon-cloudveneto
+OS_DASHBOARD_DIR=/usr/share/openstack-dashboard/openstack_dashboard
+PY3VER=python3.10
+WORKDIR=$(CURDIR)/debian/$(PYBUILD_NAME)
+
 %:
 	dh $@ --with python3 --buildsystem=pybuild
 
 override_dh_auto_install:
 	dh_auto_install
-	mkdir -p $(CURDIR)/debian/python3-django-horizon-cloudveneto/etc
-	install -m 755 $(CURDIR)/config/notifications_en.txt $(CURDIR)/debian/python3-django-horizon-cloudveneto/etc
+	mkdir -p $(WORKDIR)/etc/openstack-auth-shib/notifications
+	mkdir -p $(WORKDIR)/usr/share/openstack-auth-shib
+	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards/settings
+	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards/project
+	install -m 755 $(CURDIR)/config/notifications_en.txt $(WORKDIR)/etc/openstack-auth-shib/notifications
+	install -m 755 $(CURDIR)/config/idem-template-metadata.xml $(WORKDIR)/etc/openstack-auth-shib
+	install -m 755 $(CURDIR)/config/actions.conf $(WORKDIR)/etc/openstack-auth-shib
+	install -m 755 $(CURDIR)/config/logging.conf $(WORKDIR)/etc/openstack-auth-shib
+	install -m 755 $(CURDIR)/config/attribute-map.xml $(WORKDIR)/usr/share/openstack-auth-shib
+	ln -fs /usr/lib/$(PY3VER)/dist-packages/idmanager $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards
+	ln -fs /usr/lib/$(PY3VER)/dist-packages/password_manager $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards/settings
+	ln -fs /usr/lib/$(PY3VER)/dist-packages/api_access_manager $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards/project
 
