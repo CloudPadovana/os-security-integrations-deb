@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+TAG_VER=security_integrations_R_1_2_7_1
+
+if [ ! -e ${TAG_VER}.tar.gz ]; then
+    wget https://github.com/CloudPadovana/openstack-security-integrations/archive/refs/tags/${TAG_VER}.tar.gz
+    tar zxf ${TAG_VER}.tar.gz
+fi
+
+T_DIR=${PWD}/openstack-security-integrations-${TAG_VER}
+
+mv ${T_DIR}/config ${PWD}
+mv ${T_DIR}/src ${PWD}
+
+MODULE_LIST="api_access_manager log_manager member_manager password_manager project_manager"
+MODULE_LIST="${MODULE_LIST} registration_manager subscription_manager user_manager"
+
+for ITEM in ${MODULE_LIST}; do
+    mkdir src/${ITEM}/templates ;
+    mv src/templates/${ITEM} src/${ITEM}/templates ;
+done
+
+mv src/log_manager src/member_manager src/project_manager src/registration_manager \
+   src/subscription_manager src/user_manager src/idmanager
+
+
+dpkg-buildpackage -b -us -ui -uc
+
+rm -rf ${TAG_VER}.tar.gz ${T_DIR} src config
+

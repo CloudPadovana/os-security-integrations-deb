@@ -1,0 +1,13 @@
+Source: python3-django-horizon-cloudveneto
+Maintainer: Paolo Andreetto <paolo.andreetto@pd.infn.it>
+Section: python
+Priority: optional
+Build-Depends: dh-python, python3-all, debhelper (>= 9)
+Standards-Version: 3.9.6
+
+Package: python3-django-horizon-cloudveneto
+Architecture: all
+Depends: ${misc:Depends}, ${python3:Depends}
+Description: CloudVeneto integrations for Openstack Horizon.
+ CloudVeneto integrations for Openstack Horizon.
+

@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME=openstack-security-integrations
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_install:
+	dh_auto_install
+	mkdir -p $(CURDIR)/debian/openstack-security-integrations/etc
+	install -m 755 $(CURDIR)/config/notifications_en.txt $(CURDIR)/debian/python3-django-horizon-cloudveneto/etc
+

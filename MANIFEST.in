@@ -1,0 +1,9 @@
+include src/api_access_manager/templates/api_access_manager/*.template
+include src/idmanager/log_manager/templates/log_manager/*.html
+include src/idmanager/member_manager/templates/member_manager/*.html
+include src/idmanager/project_manager/templates/project_manager/*.html
+include src/idmanager/registration_manager/templates/registration_manager/*.html
+include src/idmanager/subscription_manager/templates/subscription_manager/*.html
+include src/idmanager/user_manager/templates/user_manager/*.html
+include src/password_manager/templates/password_manager/*.html
+
