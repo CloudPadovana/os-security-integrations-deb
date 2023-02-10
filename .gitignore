@@ -2,4 +2,6 @@
 config
 src
 .pybuild
-
+.debhelper
+files
+python3-django-horizon-cloudveneto*
