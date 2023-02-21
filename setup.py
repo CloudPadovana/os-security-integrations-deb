@@ -19,7 +19,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 setup(
-    name='python3-django-horizon-cloudveneto',
+    name='cloudveneto-horizon-extensions',
     version='1.2.7',
     description='CloudVeneto integrations for Openstack Horizon',
     long_description='''CloudVeneto integrations for Openstack Horizon''',

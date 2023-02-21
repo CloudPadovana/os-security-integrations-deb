@@ -1,9 +1,10 @@
 #!/usr/bin/make -f
 
-PYBUILD_NAME=python3-django-horizon-cloudveneto
+PYBUILD_NAME=cloudveneto-horizon-extensions
 OS_DASHBOARD_DIR=/usr/share/openstack-dashboard/openstack_dashboard
 PY3VER=python3.10
 WORKDIR=$(CURDIR)/debian/$(PYBUILD_NAME)
+PYWORKDIR=$(WORKDIR)/usr/lib/$(PY3VER)/dist-packages
 
 %:
 	dh $@ --with python3 --buildsystem=pybuild
@@ -14,12 +15,37 @@ override_dh_auto_install:
 	mkdir -p $(WORKDIR)/usr/share/openstack-auth-shib
 	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards/settings
 	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards/project
+	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/templates/auth
+	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/static/dashboard/img
+	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/themes/cap/static/img
+	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/themes/cap/templates/auth
+	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/themes/cap/templates/header
+	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/enabled
+	mkdir -p $(WORKDIR)/$(OS_DASHBOARD_DIR)/local/local_settings.d
+	mkdir -p $(PYWORKDIR)/horizon/management/commands
+	mkdir -p $(WORKDIR)/var/cache/openstack-auth-shib/msg
+	mv $(PYWORKDIR)/idmanager $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards
+	mv $(PYWORKDIR)/password_manager $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards/settings
+	mv $(PYWORKDIR)/api_access_manager $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards/project
 	install -m 755 $(CURDIR)/config/notifications_en.txt $(WORKDIR)/etc/openstack-auth-shib/notifications
 	install -m 755 $(CURDIR)/config/idem-template-metadata.xml $(WORKDIR)/etc/openstack-auth-shib
 	install -m 755 $(CURDIR)/config/actions.conf $(WORKDIR)/etc/openstack-auth-shib
 	install -m 755 $(CURDIR)/config/logging.conf $(WORKDIR)/etc/openstack-auth-shib
 	install -m 755 $(CURDIR)/config/attribute-map.xml $(WORKDIR)/usr/share/openstack-auth-shib
-	ln -fs /usr/lib/$(PY3VER)/dist-packages/idmanager $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards
-	ln -fs /usr/lib/$(PY3VER)/dist-packages/password_manager $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards/settings
-	ln -fs /usr/lib/$(PY3VER)/dist-packages/api_access_manager $(WORKDIR)/$(OS_DASHBOARD_DIR)/dashboards/project
+	install -m 755 $(CURDIR)/src/templates/*course.html $(WORKDIR)/$(OS_DASHBOARD_DIR)/templates
+	install -m 755 $(CURDIR)/src/templates/*aai*.html $(WORKDIR)/$(OS_DASHBOARD_DIR)/templates
+	install -m 755 $(CURDIR)/src/templates/*regist*.html $(WORKDIR)/$(OS_DASHBOARD_DIR)/templates
+	install -m 755 $(CURDIR)/src/templates/aup.html $(WORKDIR)/$(OS_DASHBOARD_DIR)/templates
+	install -m 755 $(CURDIR)/src/templates/_login_page.html $(WORKDIR)/$(OS_DASHBOARD_DIR)/templates/auth
+	install -m 755 $(CURDIR)/src/templates/*.png $(WORKDIR)/$(OS_DASHBOARD_DIR)/static/dashboard/img
+	install -m 755 $(CURDIR)/src/themes/cap/static/*.scss $(WORKDIR)/$(OS_DASHBOARD_DIR)/themes/cap/static
+	install -m 755 $(CURDIR)/src/templates/favicon.ico $(WORKDIR)/$(OS_DASHBOARD_DIR)/themes/cap/static/img
+	install -m 755 $(CURDIR)/src/themes/cap/templates/*.html $(WORKDIR)/$(OS_DASHBOARD_DIR)/themes/cap/templates
+	install -m 755 $(CURDIR)/src/themes/cap/templates/auth/*.html $(WORKDIR)/$(OS_DASHBOARD_DIR)/themes/cap/templates/auth
+	install -m 755 $(CURDIR)/src/themes/cap/templates/header/*.html $(WORKDIR)/$(OS_DASHBOARD_DIR)/themes/cap/templates/header
+	install -m 755 $(CURDIR)/src/dashboard_conf/_1000*.py $(WORKDIR)/$(OS_DASHBOARD_DIR)/local/local_settings.d
+	install -m 755 $(CURDIR)/src/dashboard_conf/_18*.py $(WORKDIR)/$(OS_DASHBOARD_DIR)/enabled
+	install -m 755 $(CURDIR)/src/dashboard_conf/_35*.py $(WORKDIR)/$(OS_DASHBOARD_DIR)/enabled
+	install -m 755 $(CURDIR)/src/dashboard_conf/_55*.py $(WORKDIR)/$(OS_DASHBOARD_DIR)/enabled
+	install -m 755 $(CURDIR)/src/commands/*.py $(PYWORKDIR)/horizon/management/commands
 
